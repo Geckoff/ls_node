@@ -1,0 +1,62 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "lowdb is awesome"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "email": "test@test.test",
+      "salt": "2346477f1c6a588bcdfbd5be7f8825d8",
+      "hash": "2cdc291d4affe77da710fa6f975809767bfbab2a144c16eb230e6e0da33a911b4951dc8543593697cf66646ab4d7c0262e73c5c0cfe6e6007465406a2a4fc29333e5f986bd2deacd8a86a15912044b0f5416afbd6faf1a9b365e2a0c2f50572c53fc9e64107dca42a11a0a245e9443c85d6a68d50b95cff68c45ccd0a89225ed017d8b144ed6a0c679f053decf5374aae84c61880132e64f01e00e7f438279cd47f192b4982544fa8b8ea75a785e9b0828adac2e366262f58e553f28b923c6de866988d57aa315d4df59f1451499a5d698e39932467c26915482a03250e53786ebbf94606c8a3ac1dd73ecf62d967e53aa23dcb1789c42d351eaa11fa9d28c3b63dee0e8543cc4c1679a148993307631bdb368d26dbaaaa7ea0f91bff0c4d5cf1159c20bca55039e4e673e6d3269d1d39921058a75b4b04e74d0e406025eb8df657e278402b40e456f499f7856482e08c40cafa9ee5dbbb5039ad8d30e243ea92eed3af633fcf855bfc670613d80c7853cfdba12173b92090012b1e811434ecb8d9d33e737ff9ae76a7ef4f876157b003674bd026111675d540313e019e9110b9131a680634e463f856ed96693567892541e1a7358a51e4ab6deb028ba08847259f5bd970e73be156fbaea01d1b4673a591c886185224cc770c0af206731cce3f501f8aa3fb7fc93f2cd63cb40ddb5cda6057d24581a99b656e5268ac1a394b5"
+    }
+  ],
+  "counters": [
+    {
+      "id": 1,
+      "name": "age",
+      "display": "Возраст",
+      "value": "12331"
+    },
+    {
+      "id": 2,
+      "name": "concerts",
+      "display": "Число концертов",
+      "value": "13422"
+    },
+    {
+      "id": 3,
+      "name": "cities",
+      "display": "Число городов",
+      "value": "143"
+    },
+    {
+      "id": 4,
+      "name": "years",
+      "display": "Лет на сцене",
+      "value": 15
+    }
+  ],
+  "products": [
+    {
+      "id": 57008878836369,
+      "name": "test 1",
+      "price": "123",
+      "picture": "uploads/Work7.jpg"
+    },
+    {
+      "id": 65827667341768,
+      "name": "test2",
+      "price": "1233",
+      "picture": "uploads/Work71.jpg"
+    },
+    {
+      "id": 22441034665928,
+      "name": "test 3",
+      "price": "44",
+      "picture": "uploads/Work8.jpg"
+    }
+  ]
+}
