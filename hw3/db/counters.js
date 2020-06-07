@@ -27,7 +27,7 @@ const updateCountersValue = (counters) => {
 		const { isValid, errMsg } = counter.validate();
 		if (!isValid) {
 			areModelsValid = false;
-			return `${acc}${errMsg}<br>`;
+			return `${acc}${errMsg}`;
 		}
 		return acc;
 	}, "");

@@ -33,7 +33,7 @@ class Validator {
 Validator.isNumber = (value, errMsg) => {
 	//TODO bring in validation lib
 	const isValidatorValid = !isNaN(value);
-	const msg = !isValidatorValid ? errMsg || "Value has to be a number" : null;
+	const msg = !isValidatorValid ? errMsg || "Value has to be a number. " : null;
 
 	return {
 		isValidatorValid,
@@ -43,7 +43,18 @@ Validator.isNumber = (value, errMsg) => {
 
 Validator.isNotEmpty = (value, errMsg) => {
 	const isValidatorValid = value.length > 0;
-	const msg = !isValidatorValid ? errMsg || "Value cannot be empty" : null;
+	const msg = !isValidatorValid ? errMsg || "Value cannot be empty. " : null;
+
+	return {
+		isValidatorValid,
+		errMsg: msg,
+	};
+};
+
+Validator.isEmail = (value, errMsg) => {
+	const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	const isValidatorValid = re.test(String(value).toLowerCase());
+	const msg = !isValidatorValid ? errMsg || "Please, use the correct email format. " : null;
 
 	return {
 		isValidatorValid,

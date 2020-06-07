@@ -57,6 +57,12 @@
       "name": "test 3",
       "price": "44",
       "picture": "uploads/Work8.jpg"
+    },
+    {
+      "id": 61786445593376,
+      "name": "test test",
+      "price": "123123123",
+      "picture": "uploads/Work6.jpg"
     }
   ]
 }

@@ -11,7 +11,7 @@ class Counter extends BaseModel {
 	}
 
 	validateValue = () => {
-		return Validator.isNumber(this.value, `${this.display} has to be a number`);
+		return Validator.isNumber(this.value, `${this.display} has to be a number. `);
 	};
 }
 

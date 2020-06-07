@@ -1,4 +1,4 @@
-const homeRoute = "";
+const homeRoute = "/";
 
 const adminRoute = "/admin";
 const adminSkillsRooute = `${adminRoute}/skills`;

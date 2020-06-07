@@ -17,15 +17,15 @@ class Product extends BaseModel {
 	getDataOnly = () => this.getDataOnlyBase(["name", "price", "picture"]);
 
 	validateName = () => {
-		return Validator.isNotEmpty(this.name, `Name cannot be empty`);
+		return Validator.isNotEmpty(this.name, `Name cannot be empty. `);
 	};
 
 	validatePriceIsNumber = () => {
-		return Validator.isNumber(this.price, `Price has to be a number`);
+		return Validator.isNumber(this.price, `Price has to be a number. `);
 	};
 
 	validatePriceNotEmpty = () => {
-		return Validator.isNotEmpty(this.price, `Price cannot be empty`);
+		return Validator.isNotEmpty(this.price, `Price cannot be empty. `);
 	};
 }
 

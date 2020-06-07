@@ -1,5 +1,4 @@
 const { db, getDbDataError, generateId } = require("./dbConfig");
-const Product = require("../models/Product");
 
 const products = db.get("products");
 
@@ -9,9 +8,7 @@ addProduct = (product) => {
 	if (!isValid) {
 		return getDbDataError(errMsg);
 	}
-
 	product.id = generateId();
-
 	products.push(product.getDataOnly()).write();
 
 	return true;

@@ -23,7 +23,9 @@ const get = (req, res) => {
 
 	skillsCounters = getSkillsCounters(counters);
 
-	res.render("pages/index", { skillsCounters, products });
+	const { msgemail } = req.query;
+
+	res.render("pages/index", { skillsCounters, products, msgemail });
 };
 
 module.exports = {

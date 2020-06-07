@@ -65,12 +65,9 @@ const uploadPost = (req, res) => {
 	form.uploadDir = path.join(process.cwd(), uploadsDir);
 
 	form.parse(req, function (err, fields, files) {
-		console.log(fields);
 		let fileName = path.join(uploadsDir, files.photo.name);
 
 		const nonDuplicateFileName = avoidFileNameDuplicates(fileName);
-
-		console.log(uploadsDir, nonDuplicateFileName, files.photo.path);
 
 		fs.rename(files.photo.path, nonDuplicateFileName, function (err) {
 			if (err) {
