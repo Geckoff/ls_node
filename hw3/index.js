@@ -29,6 +29,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", require("./routes/index"));
 
-const server = app.listen(3000, function () {
+const server = app.listen(4000, function () {
 	console.log("Go to http://localhost:" + server.address().port);
 });

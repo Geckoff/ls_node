@@ -2,7 +2,7 @@ const { homeRoute } = require("../routes/routes");
 const url = require("url");
 const Validator = require("../validation/Validator");
 const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(process.env.SG_API);
+//sgMail.setApiKey(process.env.SG_API);
 
 const emailSuccessMsg = "Email was sent";
 const emailFailMsg = "Email was not sent, please, try again later";
@@ -26,15 +26,15 @@ const post = (req, res) => {
 		text: message,
 	};
 
-	sgMail.send(objectToSend).then(
-		(res) => {
-			redirectHomeQuery(res, { msgemail: emailSuccessMsg });
-		},
-		(err) => {
-			console.log(err);
-			redirectHomeQuery(res, { msgemail: emailFailMsg });
-		}
-	);
+	// sgMail.send(objectToSend).then(
+	// 	(res) => {
+	// 		redirectHomeQuery(res, { msgemail: emailSuccessMsg });
+	// 	},
+	// 	(err) => {
+	// 		console.log(err);
+	// 		redirectHomeQuery(res, { msgemail: emailFailMsg });
+	// 	}
+	// );
 };
 
 const validateFormFields = (name, email) => {

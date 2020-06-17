@@ -13,6 +13,7 @@ const get = (req, res) => {
 };
 
 const post = (req, res) => {
+	console.log(req.get("Content-Type"));
 	const { email, password } = req.body;
 	const user = getUserByEmail(email);
 
