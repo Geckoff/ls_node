@@ -1,5 +1,6 @@
 const BaseController = require("./Base");
 const { validatePasswordSchema } = require("../utils/validation");
+const User = require("../models/User");
 
 class ProfileController extends BaseController {
 	missingPasswordError = "Current password missing";
@@ -7,18 +8,21 @@ class ProfileController extends BaseController {
 
 	getProfile = async (req, res) => {
 		const accessToken = req.headers.authorization;
-		const user = await this.getAuthorizedUserByToken(accessToken, res);
-		if (!user) {
-			return;
+		try {
+			const user = await this.getAuthorizedUserByTokenWithResponse(accessToken, res);
+			if (!user) {
+				return;
+			}
+			const frontUserObject = user.getFrontUserObjectWithPermissions();
+			this.respondWithData(frontUserObject, res);
+		} catch (err) {
+			this.respondWithError(err, res);
 		}
-
-		const frontUserObject = user.getFrontUserObject();
-		this.respondWithData(frontUserObject, res);
 	};
 
 	patchProfile = async (req, res) => {
 		const accessToken = req.headers.authorization;
-		const user = await this.getAuthorizedUserByToken(accessToken, res);
+		const user = await this.getAuthorizedUserByTokenWithResponse(accessToken, res);
 		if (!user) {
 			return;
 		}
@@ -29,7 +33,7 @@ class ProfileController extends BaseController {
 		}
 		try {
 			const userWithUpdatedData = await user.save();
-			const frontUserObject = userWithUpdatedData.getFrontUserObject();
+			const frontUserObject = userWithUpdatedData.getFrontUserObjectWithPermissions();
 			this.respondWithData(frontUserObject, res);
 		} catch (err) {
 			this.respondWithError(err, res);
@@ -61,6 +65,38 @@ class ProfileController extends BaseController {
 		}
 		user.setPassword(newPassword);
 		return true;
+	};
+
+	getAuthorizedUserByTokenWithResponse = async (accessToken, res) => {
+		const user = await this.getAuthorizedUserByToken(accessToken);
+		if (!user) {
+			this.respondWithLoginError(res);
+		}
+		return user;
+	};
+
+	getAuthorizedUserByToken = async (accessToken) => {
+		if (!accessToken) {
+			return false;
+		}
+
+		try {
+			const token = this.tokens.getDecodedValidToken(accessToken);
+			if (!token) {
+				return false;
+			}
+			const userId = token.user.id;
+			const user = await User.findById(userId);
+
+			if (!user) {
+				return false;
+			}
+
+			return user;
+		} catch (err) {
+			this.respondWithError(err, res);
+			return false;
+		}
 	};
 }
 

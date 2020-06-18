@@ -1,5 +1,4 @@
 const tokens = require("../utils/Tokens");
-const User = require("../models/User");
 
 class BaseController {
 	successStatus = "Success";
@@ -15,6 +14,7 @@ class BaseController {
 	};
 
 	respondWithError = (err, res) => {
+		console.log(err);
 		const errMsg = this.composeErrorMessage(err);
 
 		res.status(400).json({
@@ -23,8 +23,8 @@ class BaseController {
 		});
 	};
 
-	respondWithLoginError = (res) => {
-		this.respondWithError({ message: this.loginErrorMessage }, res);
+	respondWithLoginError = (res, err) => {
+		this.respondWithError({ message: this.loginErrorMessage, err }, res);
 	};
 
 	composeErrorMessage = (err) => {
@@ -52,31 +52,24 @@ class BaseController {
 		return true;
 	};
 
-	getAuthorizedUserByToken = async (accessToken, res) => {
-		if (!accessToken) {
-			this.respondWithLoginError(res);
-			return false;
-		}
-
+	getDecodedTokenWithResponse = (accessToken, res) => {
 		try {
-			const token = this.tokens.decodeToken(accessToken);
-			if (token.exp * 1000 < Date.now()) {
-				this.respondWithLoginError(res);
+			const token = this.tokens.getDecodedValidToken(accessToken);
+			if (!token) {
+				this.respondWithLoginError(res, err);
 				return false;
 			}
-			const userId = token.user.id;
-			const user = await User.findById(userId);
-
-			if (!user) {
-				this.respondWithLoginError(res);
-				return false;
-			}
-
-			return user;
+			return token;
 		} catch (err) {
-			this.respondWithLoginError(res);
+			this.respondWithLoginError(res, err);
 			return false;
 		}
+	};
+
+	isAuthorized = (req, res) => {
+		const accessToken = req.headers.authorization;
+		const decodedToken = this.getDecodedTokenWithResponse(accessToken, res);
+		return !!decodedToken;
 	};
 }
 

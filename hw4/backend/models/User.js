@@ -37,6 +37,62 @@ const userSchema = new Schema({
 	refreshTokenExpiredAt: {
 		type: Number,
 	},
+	permission: {
+		chat: {
+			C: {
+				type: Boolean,
+				default: true,
+			},
+			R: {
+				type: Boolean,
+				default: true,
+			},
+			U: {
+				type: Boolean,
+				default: true,
+			},
+			D: {
+				type: Boolean,
+				default: true,
+			},
+		},
+		news: {
+			C: {
+				type: Boolean,
+				default: true,
+			},
+			R: {
+				type: Boolean,
+				default: true,
+			},
+			U: {
+				type: Boolean,
+				default: true,
+			},
+			D: {
+				type: Boolean,
+				default: true,
+			},
+		},
+		settings: {
+			C: {
+				type: Boolean,
+				default: true,
+			},
+			R: {
+				type: Boolean,
+				default: true,
+			},
+			U: {
+				type: Boolean,
+				default: true,
+			},
+			D: {
+				type: Boolean,
+				default: true,
+			},
+		},
+	},
 });
 
 userSchema.methods.setPassword = function (password) {
@@ -57,12 +113,19 @@ userSchema.methods.getFrontUserObject = function () {
 		surName: this.lastName,
 		username: this.login,
 		image: undefined,
+	};
+};
+
+userSchema.methods.getFrontUserObjectWithPermissions = function () {
+	const frontUserObject = this.getFrontUserObject();
+	return {
+		...frontUserObject,
 		permissions: {},
 	};
 };
 
 userSchema.methods.getFrontAuthorizedUserObject = function ({ accessToken, accessTokenExpiredAt }) {
-	const frontUserObject = this.getFrontUserObject();
+	const frontUserObject = this.getFrontUserObjectWithPermissions();
 	return {
 		...frontUserObject,
 		refreshToken: this.refreshToken,

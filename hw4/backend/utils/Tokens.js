@@ -42,6 +42,17 @@ class Tokens {
 		return jwt.verify(token, this.secretWord);
 	};
 
+	getDecodedValidToken = (token) => {
+		if (!token) {
+			return false;
+		}
+		const decodedToken = this.decodeToken(token);
+		if (decodedToken.exp * 1000 < Date.now()) {
+			return false;
+		}
+		return decodedToken;
+	};
+
 	getTokens = async (tokenUser) => {
 		const { accessToken, accessTokenExpiredAt } = await this.getAccessTokenAndExpiration(
 			tokenUser
