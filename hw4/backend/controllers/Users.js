@@ -1,8 +1,9 @@
-const User = require("../models/User");
+const User = require("../model/User");
 const BaseController = require("./Base");
 
 class UsersController extends BaseController {
 	deleteError = "User doesn't exist";
+	updatePermissionError = "Permission update failed";
 
 	getUsers = async (req, res) => {
 		if (!this.isAuthorized(req, res)) {
@@ -10,7 +11,7 @@ class UsersController extends BaseController {
 		}
 
 		try {
-			const users = await User.find();
+			const users = await User.findAll();
 			const usersFrontObject = users.map((user) => user.getFrontUserObjectWithPermissions());
 			this.respondWithData(usersFrontObject, res);
 		} catch (err) {
@@ -25,7 +26,7 @@ class UsersController extends BaseController {
 
 		try {
 			const id = req.params.id;
-			const deleteddUser = await User.findByIdAndRemove(id);
+			const deleteddUser = await User.deleteById(id);
 			if (!deleteddUser) {
 				this.respondWithError({ message: this.deleteError }, res);
 			}
@@ -40,17 +41,15 @@ class UsersController extends BaseController {
 			return;
 		}
 
-		// const permission = {
-		// 	chat: { C: false, R: false, U: false, D: false },
-		// 	news: { C: false, R: false, U: false, D: false },
-		// 	settings: { C: false, R: false, U: false, D: false },
-		// };
-
 		try {
 			const id = req.params.id;
 			const { permission } = req.body;
-			await User.findByIdAndUpdate(id, { permission });
-			this.respondWithData(true, res);
+			const updatedUser = await User.updateById(id, { permission });
+			if (!updatedUser) {
+				this.respondWithError({ message: this.updatePermissionError }, res);
+			}
+			const usersFrontObject = updatedUser.getFrontUserObjectWithPermissions();
+			this.respondWithData(usersFrontObject, res);
 		} catch (err) {
 			this.respondWithError(err, res);
 		}

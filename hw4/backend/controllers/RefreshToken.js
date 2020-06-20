@@ -1,5 +1,5 @@
 const BaseController = require("./Base");
-const User = require("../models/User");
+const User = require("../model/User");
 
 class RefreshTokenController extends BaseController {
 	postRefreshToken = async (req, res) => {
@@ -10,11 +10,10 @@ class RefreshTokenController extends BaseController {
 			return;
 		}
 
-		const { accessToken, accessTokenExpiredAt } = await this.tokens.getAccessTokenAndExpiration(
-			{
-				user: user._id,
-			}
-		);
+		const {
+			accessToken,
+			accessTokenExpiredAt,
+		} = await this.tokens.getAccessTokenAndExpiration({ user: user.id });
 
 		this.respondWithData(
 			{

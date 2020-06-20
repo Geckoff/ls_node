@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const crypto = require("crypto");
 
 const userSchema = new Schema({
 	login: {
@@ -94,46 +93,6 @@ const userSchema = new Schema({
 		},
 	},
 });
-
-userSchema.methods.setPassword = function (password) {
-	this.salt = crypto.randomBytes(16).toString("hex");
-	this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 512, "sha512").toString("hex");
-};
-
-userSchema.methods.validatePassword = function (password) {
-	const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 512, "sha512").toString("hex");
-	return hash === this.hash;
-};
-
-userSchema.methods.getFrontUserObject = function () {
-	return {
-		id: this._id,
-		firstName: this.firstName,
-		middleName: this.middleName,
-		surName: this.lastName,
-		username: this.login,
-		image: undefined,
-	};
-};
-
-userSchema.methods.getFrontUserObjectWithPermissions = function () {
-	const frontUserObject = this.getFrontUserObject();
-	return {
-		...frontUserObject,
-		permissions: {},
-	};
-};
-
-userSchema.methods.getFrontAuthorizedUserObject = function ({ accessToken, accessTokenExpiredAt }) {
-	const frontUserObject = this.getFrontUserObjectWithPermissions();
-	return {
-		...frontUserObject,
-		refreshToken: this.refreshToken,
-		refreshTokenExpiredAt: this.refreshTokenExpiredAt,
-		accessToken,
-		accessTokenExpiredAt,
-	};
-};
 
 const User = mongoose.model("user", userSchema);
 

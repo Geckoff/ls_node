@@ -1,6 +1,6 @@
 const BaseController = require("./Base");
 const { validatePasswordSchema } = require("../utils/validation");
-const User = require("../models/User");
+const User = require("../model/User");
 
 class ProfileController extends BaseController {
 	missingPasswordError = "Current password missing";
@@ -32,8 +32,8 @@ class ProfileController extends BaseController {
 			return;
 		}
 		try {
-			const userWithUpdatedData = await user.save();
-			const frontUserObject = userWithUpdatedData.getFrontUserObjectWithPermissions();
+			await user.save();
+			const frontUserObject = user.getFrontUserObjectWithPermissions();
 			this.respondWithData(frontUserObject, res);
 		} catch (err) {
 			this.respondWithError(err, res);
@@ -53,7 +53,7 @@ class ProfileController extends BaseController {
 			return true;
 		}
 		if (newPassword && !oldPassword) {
-			this.respondWithError({ message: missingPasswordError }, res);
+			this.respondWithError({ message: this.missingPasswordError }, res);
 			return false;
 		}
 		if (!this.joiValidate(res, validatePasswordSchema, { password: newPassword })) {
@@ -68,11 +68,15 @@ class ProfileController extends BaseController {
 	};
 
 	getAuthorizedUserByTokenWithResponse = async (accessToken, res) => {
-		const user = await this.getAuthorizedUserByToken(accessToken);
-		if (!user) {
-			this.respondWithLoginError(res);
+		try {
+			const user = await this.getAuthorizedUserByToken(accessToken);
+			if (!user) {
+				this.respondWithLoginError(res);
+			}
+			return user;
+		} catch (err) {
+			this.respondWithLoginError(res, err);
 		}
-		return user;
 	};
 
 	getAuthorizedUserByToken = async (accessToken) => {
@@ -80,23 +84,18 @@ class ProfileController extends BaseController {
 			return false;
 		}
 
-		try {
-			const token = this.tokens.getDecodedValidToken(accessToken);
-			if (!token) {
-				return false;
-			}
-			const userId = token.user.id;
-			const user = await User.findById(userId);
-
-			if (!user) {
-				return false;
-			}
-
-			return user;
-		} catch (err) {
-			this.respondWithError(err, res);
+		const token = this.tokens.getDecodedValidToken(accessToken);
+		if (!token) {
 			return false;
 		}
+		const userId = token.user.id;
+		const user = await User.findById(userId);
+
+		if (!user) {
+			return false;
+		}
+
+		return user;
 	};
 }
 

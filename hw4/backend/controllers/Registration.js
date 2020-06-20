@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../model/User");
 const BaseController = require("./Base");
 const { validatePasswordSchema } = require("../utils/validation");
 
@@ -20,19 +20,18 @@ class RegistrationController extends BaseController {
 		user.setPassword(password);
 
 		try {
-			const saveResult = await user.save();
-			const userId = saveResult._id;
+			await user.save();
+			const userId = user.id;
 			const {
 				accessToken,
 				refreshToken,
 				accessTokenExpiredAt,
 				refreshTokenExpiredAt,
 			} = await this.tokens.getTokens({ id: userId });
-			const newUser = await User.findById(userId);
-			newUser.refreshToken = refreshToken;
-			newUser.refreshTokenExpiredAt = refreshTokenExpiredAt;
-			const newUserWithRefreshToken = await newUser.save();
-			const fonrtAuthorizedUserObj = newUserWithRefreshToken.getFrontAuthorizedUserObject({
+			user.refreshToken = refreshToken;
+			user.refreshTokenExpiredAt = refreshTokenExpiredAt;
+			await user.save();
+			const fonrtAuthorizedUserObj = user.getFrontAuthorizedUserObject({
 				accessToken,
 				accessTokenExpiredAt,
 			});

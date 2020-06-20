@@ -1,5 +1,5 @@
 const BaseController = require("./Base");
-const User = require("../models/User");
+const User = require("../model/User");
 
 class LoginController extends BaseController {
 	loginErr = "Login or password is incorrect";
@@ -8,7 +8,7 @@ class LoginController extends BaseController {
 		const { login, password } = req.body;
 
 		try {
-			const user = await User.findOne({ login });
+			const user = await User.findByProps({ login });
 
 			if (!user || !password || !user.validatePassword(password)) {
 				this.respondWithError({ message: this.loginErr }, res);
@@ -19,13 +19,11 @@ class LoginController extends BaseController {
 				refreshToken,
 				accessTokenExpiredAt,
 				refreshTokenExpiredAt,
-			} = await this.tokens.getTokens({ id: user._id });
-			const userWithUpdatedToken = await User.findOneAndUpdate(
-				{ login },
-				{ refreshToken, refreshTokenExpiredAt },
-				{ new: true }
-			);
-			const fonrtAuthorizedUserObj = userWithUpdatedToken.getFrontAuthorizedUserObject({
+			} = await this.tokens.getTokens({ id: user.id });
+			user.refreshToken = refreshToken;
+			user.refreshTokenExpiredAt = refreshTokenExpiredAt;
+			await user.save();
+			const fonrtAuthorizedUserObj = user.getFrontAuthorizedUserObject({
 				accessToken,
 				accessTokenExpiredAt,
 			});
