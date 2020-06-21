@@ -1,5 +1,5 @@
 const BaseController = require("./Base");
-const News = require("../models/News");
+const News = require("../model/News");
 
 class NewsController extends BaseController {
 	postError = "Post not found";
@@ -11,17 +11,19 @@ class NewsController extends BaseController {
 		}
 
 		try {
+			const accessToken = req.headers.authorization;
 			const decodedToken = this.getDecodedTokenWithResponse(accessToken, res);
 			const userId = decodedToken.user.id;
-			const { title, text } = req.body;
-			const news = await News.create({
+			const { title, text, created_at } = req.body;
+			const news = new News({
 				title,
 				text,
-				created_at: Date.now(),
+				created_at: new Date(),
 				user: userId,
 			});
-			const savedNews = await news.save();
-			this.respondWithData(savedNews, res);
+			await news.save();
+			const frontNewsObjects = await this.fetchAllNews();
+			this.respondWithData(frontNewsObjects, res);
 		} catch (err) {
 			this.respondWithError(err, res);
 		}
@@ -29,7 +31,7 @@ class NewsController extends BaseController {
 
 	getNews = async (req, res) => {
 		try {
-			const news = await News.find().populate("user");
+			const news = await News.findAllNewsWithAuthor();
 			const frontNewsObjects = news.map((post) => post.getFrontNewsObject());
 			this.respondWithData(frontNewsObjects, res);
 		} catch (err) {
@@ -40,7 +42,8 @@ class NewsController extends BaseController {
 	getNewsById = async (req, res) => {
 		try {
 			const id = req.params.id;
-			const frontNewsObjects = await this.fetchAllNews();
+			const news = await News.findById(id);
+			const frontNewsObjects = news.getFrontNewsObject();
 			this.respondWithData(frontNewsObjects, res);
 		} catch (err) {
 			this.respondWithError({ message: this.postError, err }, res);
@@ -73,7 +76,7 @@ class NewsController extends BaseController {
 
 		try {
 			const id = req.params.id;
-			const deletedNews = await News.findByIdAndRemove(id);
+			const deletedNews = await News.deleteById(id);
 			if (!deletedNews) {
 				this.respondWithError({ message: this.deleteError }, res);
 			}
@@ -85,7 +88,7 @@ class NewsController extends BaseController {
 	};
 
 	fetchAllNews = async () => {
-		const allNews = await News.find().populate("user");
+		const allNews = await News.findAllNewsWithAuthor();
 		const frontNewsObjects = allNews.map((post) => post.getFrontNewsObject());
 		return frontNewsObjects;
 	};

@@ -4,16 +4,16 @@ const { validatePasswordSchema } = require("../utils/validation");
 
 class RegistrationController extends BaseController {
 	postRegister = async (req, res) => {
-		const { login, password, firstName, lastName, middleName } = req.body;
+		const { username, password, firstName, surName, middleName } = req.body;
 
 		if (!this.joiValidate(res, validatePasswordSchema, { password })) {
 			return;
 		}
 
 		const user = new User({
-			login,
+			username,
 			firstName,
-			lastName,
+			surName,
 			middleName,
 		});
 

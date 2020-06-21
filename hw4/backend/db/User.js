@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-	login: {
+	username: {
 		type: String,
-		required: [true, "Login is required."],
-		minlength: [3, "Login has to be at least 3 characters long."],
-		maxlength: [20, "Login has to be at most 20 characters long."],
+		required: [true, "User name is required."],
+		minlength: [3, "User name has to be at least 3 characters long."],
+		maxlength: [20, "User name has to be at most 20 characters long."],
 		unique: true,
 	},
 	firstName: {
@@ -14,7 +14,7 @@ const userSchema = new Schema({
 		min: 1,
 		max: [100, "First name has to be at most 100 characters long."],
 	},
-	lastName: {
+	surName: {
 		type: String,
 		min: 1,
 		max: [100, "Last name has to be at most 100 characters long."],

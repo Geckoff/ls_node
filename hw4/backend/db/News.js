@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const newsSchema = new Schema({
 	created_at: {
-		type: Number,
+		type: String,
 		required: true,
 	},
 	text: {
@@ -18,19 +18,6 @@ const newsSchema = new Schema({
 		ref: "user",
 	},
 });
-
-newsSchema.methods.getFrontNewsObject = function () {
-	const newsObject = {
-		id: this._id,
-		created_at: this.created_at,
-		text: this.text,
-		title: this.title,
-	};
-	if (this.user) {
-		newsObject.user = this.user.getFrontUserObject();
-	}
-	return newsObject;
-};
 
 const News = mongoose.model("news", newsSchema);
 

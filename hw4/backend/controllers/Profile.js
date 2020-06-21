@@ -1,6 +1,7 @@
 const BaseController = require("./Base");
 const { validatePasswordSchema } = require("../utils/validation");
 const User = require("../model/User");
+const formidable = require("formidable");
 
 class ProfileController extends BaseController {
 	missingPasswordError = "Current password missing";
@@ -26,15 +27,19 @@ class ProfileController extends BaseController {
 		if (!user) {
 			return;
 		}
-		this.applyInfoUpdates(req.body, user);
-		const arePasswordUpdatesValid = this.applyPasswordUpdates(req.body, user, res);
-		if (!arePasswordUpdatesValid) {
-			return;
-		}
+		const form = new formidable.IncomingForm();
 		try {
-			await user.save();
-			const frontUserObject = user.getFrontUserObjectWithPermissions();
-			this.respondWithData(frontUserObject, res);
+			form.parse(req, async (err, fields, files) => {
+				this.applyInfoUpdates(fields, user);
+				const arePasswordUpdatesValid = this.applyPasswordUpdates(fields, user, res);
+				if (!arePasswordUpdatesValid) {
+					return;
+				}
+
+				await user.save();
+				const frontUserObject = user.getFrontUserObjectWithPermissions();
+				this.respondWithData(frontUserObject, res);
+			});
 		} catch (err) {
 			this.respondWithError(err, res);
 		}
@@ -43,7 +48,7 @@ class ProfileController extends BaseController {
 	applyInfoUpdates = (body, user) => {
 		const { firstName, middleName, surName, avatar } = body;
 		user.firstName = firstName !== undefined ? firstName : user.firstName;
-		user.lastName = surName !== undefined ? surName : user.lastName;
+		user.surName = surName !== undefined ? surName : user.surName;
 		user.middleName = middleName !== undefined ? middleName : user.middleName;
 	};
 

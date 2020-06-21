@@ -1,18 +1,18 @@
-const UserDB = require("../models/User");
+const UserDB = require("../db/User");
 const crypto = require("crypto");
 
 class User {
 	defaultPermission = {
-		chat: { C: false, R: false, U: false, D: false },
-		news: { C: false, R: false, U: false, D: false },
-		settings: { C: false, R: false, U: false, D: false },
+		chat: { C: true, R: true, U: true, D: true },
+		news: { C: true, R: true, U: true, D: true },
+		settings: { C: true, R: true, U: true, D: true },
 	};
 
 	constructor(propsDbModel) {
 		this.id = propsDbModel._id;
-		this.login = propsDbModel.login;
+		this.username = propsDbModel.username;
 		this.firstName = propsDbModel.firstName;
-		this.lastName = propsDbModel.lastName;
+		this.surName = propsDbModel.surName;
 		this.middleName = propsDbModel.middleName;
 		this.salt = propsDbModel.salt;
 		this.hash = propsDbModel.hash;
@@ -28,9 +28,9 @@ class User {
 			await this.dbModel.save();
 			this.id = this.dbModel.id;
 		} else {
-			this.dbModel.login = this.login;
+			this.dbModel.username = this.username;
 			this.dbModel.firstName = this.firstName;
-			this.dbModel.lastName = this.lastName;
+			this.dbModel.surName = this.surName;
 			this.dbModel.middleName = this.middleName;
 			this.dbModel.salt = this.salt;
 			this.dbModel.hash = this.hash;
@@ -56,8 +56,8 @@ class User {
 			id: this.id,
 			firstName: this.firstName,
 			middleName: this.middleName,
-			surName: this.lastName,
-			username: this.login,
+			surName: this.surName,
+			username: this.username,
 			image: undefined,
 		};
 	};

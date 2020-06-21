@@ -7,10 +7,11 @@ class BaseController {
 	tokens = tokens;
 
 	respondWithData = (result, res) => {
-		res.json({
-			status: this.successStatus,
-			data: result,
-		});
+		// res.json({
+		// 	status: this.successStatus,
+		// 	data: result,
+		// });
+		res.json(result);
 	};
 
 	respondWithError = (err, res) => {

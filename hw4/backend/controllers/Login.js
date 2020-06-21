@@ -5,10 +5,10 @@ class LoginController extends BaseController {
 	loginErr = "Login or password is incorrect";
 
 	postLogin = async (req, res) => {
-		const { login, password } = req.body;
+		const { username, password } = req.body;
 
 		try {
-			const user = await User.findByProps({ login });
+			const user = await User.findByProps({ username });
 
 			if (!user || !password || !user.validatePassword(password)) {
 				this.respondWithError({ message: this.loginErr }, res);

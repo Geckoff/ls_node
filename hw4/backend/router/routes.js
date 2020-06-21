@@ -8,6 +8,7 @@ const newsById = news + "/:id";
 const users = api + "/users";
 const userById = users + "/:id";
 const userByIdPermission = userById + "/permission";
+const undefinedRoute = "*";
 
 module.exports = {
 	api,
@@ -20,4 +21,5 @@ module.exports = {
 	users,
 	userById,
 	userByIdPermission,
+	undefinedRoute,
 };
