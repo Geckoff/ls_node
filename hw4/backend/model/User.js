@@ -84,12 +84,12 @@ class User {
 
 User.findById = async (id) => {
 	const dbUser = await UserDB.findById(id);
-	return new User(dbUser);
+	return dbUser ? new User(dbUser) : null;
 };
 
 User.findByProps = async (props) => {
 	const dbUser = await UserDB.findOne(props);
-	return new User(dbUser);
+	return dbUser ? new User(dbUser) : null;
 };
 
 User.findAll = async () => {
